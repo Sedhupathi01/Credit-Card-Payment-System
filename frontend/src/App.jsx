@@ -30,7 +30,7 @@ function App() {
             <Route path="/add-card" element={token ? <AddCard /> : <Navigate to="/login" />} />
             <Route path="/make-payment" element={token ? <MakePayment /> : <Navigate to="/login" />} />
             <Route path="/transactions" element={token ? <TransactionHistory /> : <Navigate to="/login" />} />
-            <Route path="/admin" element={token ? <AdminDashboard /> : <Navigate to="/login" />} />
+            <Route path="/admin-dashboard" element={token ? <AdminDashboard /> : <Navigate to="/login" />} />
             
             <Route path="/" element={<Navigate to={token ? "/dashboard" : "/login"} />} />
           </Routes>
