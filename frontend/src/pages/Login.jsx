@@ -25,34 +25,34 @@ export default function Login() {
 
   return (
     <div className="flex items-center justify-center min-h-[80vh] px-4">
-      <div className="glass-card p-10 rounded-3xl w-full max-w-lg shadow-2xl relative overflow-hidden group">
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+      <div className="light-card p-10 w-full max-w-md shadow-lg bg-white relative">
+        <div className="absolute top-0 left-0 w-full h-1 bg-blue-600"></div>
         
-        <h2 className="text-4xl font-black mb-2 text-white">Welcome Back</h2>
-        <p className="text-gray-400 mb-8">Please enter your details to sign in.</p>
+        <h2 className="text-3xl font-bold mb-2 text-gray-800 text-center">Sign In</h2>
+        <p className="text-gray-500 mb-8 text-center text-sm">Access your credit operations account.</p>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-sm animate-pulse">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm font-medium">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-bold text-gray-300 mb-2 ml-1">Email Address</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
             <input 
-              className="w-full bg-white/5 border border-white/10 px-5 py-4 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all placeholder:text-gray-600" 
+              className="w-full bg-white border border-gray-300 px-4 py-3 rounded-md text-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder-gray-400" 
               type="email" 
-              placeholder="e.g. user@example.com"
+              placeholder="user@example.com"
               value={email} 
               onChange={e=>setEmail(e.target.value)} 
               required 
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-300 mb-2 ml-1">Password</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1">Password</label>
             <input 
-              className="w-full bg-white/5 border border-white/10 px-5 py-4 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all placeholder:text-gray-600" 
+              className="w-full bg-white border border-gray-300 px-4 py-3 rounded-md text-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder-gray-400" 
               type="password" 
               placeholder="••••••••"
               value={password} 
@@ -62,14 +62,14 @@ export default function Login() {
           </div>
           <button 
             type="submit" 
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black py-4 rounded-2xl transition-all shadow-xl shadow-blue-500/20 active:scale-95"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 mt-4 rounded-md transition-colors"
           >
             Sign In
           </button>
         </form>
 
-        <div className="mt-8 text-center text-gray-400 font-medium">
-          New here? <a href="/register" className="text-blue-400 hover:underline">Create an account</a>
+        <div className="mt-8 text-center text-gray-500 text-sm">
+          Don't have an account? <a href="/register" className="text-blue-600 hover:text-blue-800 font-bold hover:underline">Register</a>
         </div>
       </div>
     </div>

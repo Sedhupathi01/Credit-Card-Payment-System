@@ -25,23 +25,23 @@ export default function Register() {
 
   return (
     <div className="flex items-center justify-center min-h-[80vh] px-4 py-8">
-      <div className="glass-card p-10 rounded-3xl w-full max-w-lg shadow-2xl relative overflow-hidden group">
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-teal-500 via-emerald-500 to-blue-500"></div>
+      <div className="light-card p-10 w-full max-w-md shadow-lg bg-white relative">
+        <div className="absolute top-0 left-0 w-full h-1 bg-green-600"></div>
 
-        <h2 className="text-4xl font-black mb-2 text-white">Create Account</h2>
-        <p className="text-gray-400 mb-8">Join our secure fintech ecosystem today.</p>
+        <h2 className="text-3xl font-bold mb-2 text-gray-800 text-center">Create Account</h2>
+        <p className="text-gray-500 mb-8 text-center text-sm">Join our secure fintech ecosystem today.</p>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-sm animate-pulse">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm font-medium">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-bold text-gray-300 mb-2 ml-1">Username</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1">Username</label>
             <input 
-              className="w-full bg-white/5 border border-white/10 px-5 py-4 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all placeholder:text-gray-600" 
+              className="w-full bg-white border border-gray-300 px-4 py-3 rounded-md text-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder-gray-400" 
               type="text" 
               placeholder="e.g. johndoe"
               value={username} 
@@ -50,9 +50,9 @@ export default function Register() {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-300 mb-2 ml-1">Email Address</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
             <input 
-              className="w-full bg-white/5 border border-white/10 px-5 py-4 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all placeholder:text-gray-600" 
+              className="w-full bg-white border border-gray-300 px-4 py-3 rounded-md text-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder-gray-400" 
               type="email" 
               placeholder="e.g. john@example.com"
               value={email} 
@@ -61,9 +61,9 @@ export default function Register() {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-300 mb-2 ml-1">Password</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1">Password</label>
             <input 
-              className="w-full bg-white/5 border border-white/10 px-5 py-4 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all placeholder:text-gray-600" 
+              className="w-full bg-white border border-gray-300 px-4 py-3 rounded-md text-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder-gray-400" 
               type="password" 
               placeholder="••••••••"
               value={password} 
@@ -73,14 +73,14 @@ export default function Register() {
           </div>
           <button 
             type="submit" 
-            className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-black py-4 rounded-2xl transition-all shadow-xl shadow-teal-500/20 active:scale-95"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 mt-4 rounded-md transition-colors"
           >
             Create Free Account
           </button>
         </form>
 
-        <div className="mt-8 text-center text-gray-400 font-medium">
-          Already have an account? <a href="/login" className="text-teal-400 hover:underline">Log in instead</a>
+        <div className="mt-8 text-center text-gray-500 text-sm">
+          Already have an account? <a href="/login" className="text-blue-600 hover:text-blue-800 font-bold hover:underline">Log in instead</a>
         </div>
       </div>
     </div>

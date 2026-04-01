@@ -15,10 +15,7 @@ function App() {
   return (
     <Router>
       <div className="relative min-h-screen">
-        {/* Background Blobs for extra flourish */}
-        <div className="blob-bg w-[500px] h-[500px] bg-blue-600 top-[-100px] left-[-100px] opacity-20"></div>
-        <div className="blob-bg w-[400px] h-[400px] bg-purple-600 bottom-[-50px] right-[-50px] opacity-20 delay-1000"></div>
-        <div className="blob-bg w-[300px] h-[300px] bg-teal-500 top-[20%] right-[10%] opacity-10"></div>
+        {/* Minimal clean UI */}
 
         {token && <Navbar />}
         <div className="container mx-auto px-4 py-8 relative z-10">
