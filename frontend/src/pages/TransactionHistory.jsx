@@ -6,6 +6,8 @@ export default function TransactionHistory() {
   const [transactions, setTransactions] = useState([]);
   const [status, setStatus] = useState('');
   const [dateFrom, setDateFrom] = useState('');
+  const [minAmount, setMinAmount] = useState('');
+  const [maxAmount, setMaxAmount] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -20,13 +22,15 @@ export default function TransactionHistory() {
     };
     fetchUser();
     fetchTransactions();
-  }, [status, dateFrom]);
+  }, [status, dateFrom, minAmount, maxAmount]);
 
   const fetchTransactions = async () => {
     try {
       let params = {};
       if (status) params.status = status;
       if (dateFrom) params.date_from = dateFrom;
+      if (minAmount) params.min_amount = minAmount;
+      if (maxAmount) params.max_amount = maxAmount;
       const res = await djangoApi.get('/transactions/', { params });
       setTransactions(res.data);
     } catch (err) {
@@ -79,6 +83,28 @@ export default function TransactionHistory() {
             className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 [color-scheme:dark]" 
             value={dateFrom} 
             onChange={(e) => setDateFrom(e.target.value)}
+          />
+        </div>
+        <div className="flex-1 min-w-[150px]">
+          <label className="block text-xs font-black text-gray-500 uppercase tracking-[0.2em] mb-3 ml-2">Min Amount ($)</label>
+          <input 
+            type="number" 
+            min="0"
+            className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50" 
+            value={minAmount} 
+            onChange={(e) => setMinAmount(e.target.value)}
+            placeholder="0.00"
+          />
+        </div>
+        <div className="flex-1 min-w-[150px]">
+          <label className="block text-xs font-black text-gray-500 uppercase tracking-[0.2em] mb-3 ml-2">Max Amount ($)</label>
+          <input 
+            type="number" 
+            min="0"
+            className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50" 
+            value={maxAmount} 
+            onChange={(e) => setMaxAmount(e.target.value)}
+            placeholder="1000.00"
           />
         </div>
       </div>
