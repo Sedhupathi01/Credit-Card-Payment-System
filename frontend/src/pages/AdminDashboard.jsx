@@ -3,15 +3,27 @@ import { djangoApi } from '../api/api';
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
+  const [cards, setCards] = useState([]);
   const [transactions, setTransactions] = useState([]);
+  const [filteredTxns, setFilteredTxns] = useState([]);
+
+  // Filters
+  const [dateFrom, setDateFrom] = useState('');
+  const [minAmount, setMinAmount] = useState('');
+  const [status, setStatus] = useState('');
 
   useEffect(() => {
     const fetchAdminData = async () => {
       try {
         const usersRes = await djangoApi.get('/users/');
         setUsers(usersRes.data);
+        
+        const cardsRes = await djangoApi.get('/cards/');
+        setCards(cardsRes.data);
+        
         const transRes = await djangoApi.get('/transactions/');
         setTransactions(transRes.data);
+        setFilteredTxns(transRes.data);
       } catch (err) {
         console.error(err);
       }
@@ -19,60 +31,142 @@ export default function AdminDashboard() {
     fetchAdminData();
   }, []);
 
-  const totalPayments = transactions.reduce((acc, curr) => curr.status === 'SUCCESS' ? acc + parseFloat(curr.amount) : acc, 0);
+  const handleApplyFilter = () => {
+    let filtered = transactions;
+    if (dateFrom) {
+      filtered = filtered.filter(t => t.created_at.startsWith(dateFrom));
+    }
+    if (minAmount) {
+      filtered = filtered.filter(t => parseFloat(t.amount) >= parseFloat(minAmount));
+    }
+    if (status) {
+      filtered = filtered.filter(t => t.status.toUpperCase() === status.toUpperCase());
+    }
+    setFilteredTxns(filtered);
+  };
+
+  const handleExportCSV = () => {
+    window.open(`${djangoApi.defaults.baseURL}/transactions/export/`, '_blank');
+  };
+
+  // Stats Logic
+  const totalTransactions = filteredTxns.length;
+  const todayStr = new Date().toISOString().split('T')[0];
+  const todayTransactions = filteredTxns.filter(t => t.created_at.startsWith(todayStr)).length;
+  
+  const paymentSuccess = filteredTxns.filter(t => t.status === 'SUCCESS').length;
+  const paymentFailed = filteredTxns.filter(t => t.status === 'FAILED').length;
+  
+  const totalCards = cards.length;
+  const activeCards = cards.length; 
+  const blockedCards = 0; 
+  
+  const monthlyRevenue = filteredTxns.reduce((acc, curr) => curr.status === 'SUCCESS' ? acc + parseFloat(curr.amount) : acc, 0);
 
   return (
-    <div className="max-w-7xl mx-auto mt-12 px-4 pb-20 animate-in slide-in-from-top duration-500">
-      <h2 className="text-4xl font-black mb-10 text-white tracking-tight italic">Administrative Command</h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-        <div className="glass-card p-10 rounded-[3rem] border-indigo-500/20 shadow-indigo-500/10">
-          <h3 className="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4">Network Users</h3>
-          <p className="text-6xl font-black text-white">{users.length}</p>
-          <div className="w-12 h-1 bg-indigo-500 mt-6 rounded-full opacity-30"></div>
-        </div>
-        <div className="glass-card p-10 rounded-[3rem] border-blue-500/20 shadow-blue-500/10">
-          <h3 className="text-xs font-black text-blue-400 uppercase tracking-widest mb-4">Total Traffic</h3>
-          <p className="text-6xl font-black text-white">{transactions.length}</p>
-          <div className="w-12 h-1 bg-blue-500 mt-6 rounded-full opacity-30"></div>
-        </div>
-        <div className="glass-card p-10 rounded-[3rem] border-emerald-500/20 shadow-emerald-500/10">
-          <h3 className="text-xs font-black text-emerald-400 uppercase tracking-widest mb-4">Gross Revenue</h3>
-          <p className="text-6xl font-black text-white text-gradient">${totalPayments.toFixed(0)}</p>
-          <div className="w-12 h-1 bg-emerald-500 mt-6 rounded-full opacity-30"></div>
-        </div>
+    <div className="fixed inset-0 z-[100] flex flex-col font-serif bg-[#f6f6f6]">
+      {/* Top Black Bar */}
+      <div className="bg-black text-white px-6 py-3 border-b-8 border-gray-200 flex items-center">
+        <span className="text-xl mr-2">💳</span>
+        <h1 className="text-xl font-bold tracking-wide">Credit Card Manager - Dashboard</h1>
       </div>
 
-      <div className="glass-card rounded-[3rem] overflow-hidden border-white/5 shadow-2xl">
-        <div className="px-10 py-8 border-b border-white/5 flex items-center justify-between">
-          <h3 className="text-2xl font-black text-white">Identity Registry</h3>
-          <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Global Scan Active</div>
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <div className="w-56 bg-[#1a1a1a] text-white p-6 flex flex-col justify-between">
+          <div>
+            <h3 className="text-gray-300 font-bold mb-6 text-sm">Menu</h3>
+            <ul className="space-y-6 text-sm font-semibold">
+              <li className="flex items-center gap-3 cursor-pointer hover:text-blue-300"><span className="text-purple-400">👤</span> Users</li>
+              <li className="flex items-center gap-3 cursor-pointer hover:text-blue-300"><span className="text-blue-400">💳</span> Cards</li>
+              <li className="flex items-center gap-3 cursor-pointer hover:text-blue-300"><span className="text-yellow-500">💰</span> Transactions</li>
+            </ul>
+          </div>
+          <button 
+            onClick={handleExportCSV}
+            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm flex items-center gap-2 mt-10"
+          >
+            📋 Export CSV
+          </button>
         </div>
-        <table className="w-full text-left">
-          <thead>
-            <tr className="bg-white/5">
-              <th className="px-10 py-6 text-xs font-black text-gray-400 uppercase tracking-widest">Index</th>
-              <th className="px-10 py-6 text-xs font-black text-gray-400 uppercase tracking-widest">Handle</th>
-              <th className="px-10 py-6 text-xs font-black text-gray-400 uppercase tracking-widest">Protocol Address</th>
-              <th className="px-10 py-6 text-xs font-black text-gray-400 uppercase tracking-widest">Access Level</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/5">
-            {users.map(u => (
-              <tr key={u.id} className="hover:bg-white/[0.02] transition-colors group">
-                <td className="px-10 py-6 text-sm text-gray-500 font-mono">#{u.id}</td>
-                <td className="px-10 py-6 font-bold text-white group-hover:text-indigo-400 transition-colors">{u.username}</td>
-                <td className="px-10 py-6 text-sm text-gray-400">{u.email}</td>
-                <td className="px-10 py-6">
-                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter ${u.is_staff ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'bg-white/5 text-gray-500'}`}>
-                    {u.is_staff ? 'System Admin' : 'Standard User'}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+        {/* Main Content */}
+        <div className="flex-1 p-8 overflow-y-auto w-full max-w-[1200px]">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+            👋 Welcome Back, Admin
+          </h2>
+
+          {/* Filter Bar */}
+          <div className="bg-white p-4 rounded-lg shadow-sm mb-6 border border-gray-100 flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2 text-blue-600 text-sm font-bold w-full md:w-auto">
+              <span>🔍</span> Filter Transactions
+            </div>
+            
+            <input 
+              type="date" 
+              className="border border-gray-300 rounded px-3 py-1.5 text-sm outline-none focus:border-black"
+              value={dateFrom}
+              onChange={(e)=>setDateFrom(e.target.value)}
+            />
+            <input 
+              type="number" 
+              placeholder="Min Amount"
+              className="border border-gray-300 rounded px-3 py-1.5 text-sm outline-none focus:border-black w-32"
+              value={minAmount}
+              onChange={(e)=>setMinAmount(e.target.value)}
+            />
+            <select 
+              className="border border-gray-300 rounded px-3 py-1.5 text-sm outline-none focus:border-black bg-white"
+              value={status}
+              onChange={(e)=>setStatus(e.target.value)}
+            >
+              <option value="">Status</option>
+              <option value="SUCCESS">Success</option>
+              <option value="FAILED">Failed</option>
+              <option value="PENDING">Pending</option>
+            </select>
+            <button 
+              onClick={handleApplyFilter}
+              className="bg-black text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-gray-800"
+            >
+              Apply Filter
+            </button>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <StatCard title="Total Transactions" value={totalTransactions} />
+            <StatCard title="Today Transactions" value={todayTransactions} />
+            <StatCard title="Payment Success" value={paymentSuccess} />
+            <StatCard title="Payment Failed" value={paymentFailed} />
+            <StatCard title="Total Cards" value={totalCards} />
+            <StatCard title="Active Cards" value={activeCards} />
+            <StatCard title="Blocked Cards" value={blockedCards} />
+            <StatCard title="Monthly Revenue" value={`₹ ${monthlyRevenue.toFixed(0)}`} />
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 min-h-[200px]">
+             <h3 className="font-bold text-gray-800 flex items-center gap-2"><span className="text-blue-500">📊</span> Revenue Analytics</h3>
+          </div>
+        </div>
       </div>
+      
+      {/* Return to frontend button so they can still access site */}
+      <button 
+        onClick={() => window.location.href = "/dashboard"}
+        className="fixed bottom-4 right-4 bg-gray-900 text-white p-4 rounded-full shadow-2xl opacity-50 hover:opacity-100 transition-opacity"
+      >
+        Exit Admin
+      </button>
+    </div>
+  );
+}
+
+function StatCard({ title, value }) {
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8 flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
+      <h4 className="text-sm font-bold text-gray-800 mb-6">{title}</h4>
+      <p className="text-3xl font-black text-black">{value}</p>
     </div>
   );
 }
