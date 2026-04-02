@@ -164,19 +164,26 @@ export default function AdminDashboard() {
                 <StatCard title="Monthly Rev" value={`$${monthlyRevenue.toFixed(0)}`} />
               </div>
 
-              <div className="light-card p-6 min-h-[250px] relative overflow-hidden">
+              <div className="light-card p-6 min-h-[250px] relative overflow-hidden flex flex-col justify-between">
                 <h3 className="font-bold text-gray-800 flex items-center gap-2 mb-6 border-b pb-4"><span className="text-blue-500">📊</span> Revenue Analytics Projection</h3>
                 
-                {/* Visual Chart Graphic */}
-                <div className="flex items-end justify-between h-32 w-full max-w-lg mx-auto pb-2 border-b-2 border-gray-100 px-6">
-                   <div className="w-8 bg-blue-100 h-[30%] rounded-t-sm"></div>
-                   <div className="w-8 bg-blue-200 h-[50%] rounded-t-sm"></div>
-                   <div className="w-8 bg-blue-300 h-[40%] rounded-t-sm"></div>
-                   <div className="w-8 bg-blue-400 h-[80%] rounded-t-sm"></div>
-                   <div className="w-8 bg-blue-600 h-[100%] rounded-t-sm shadow-sm"></div>
-                   <div className="w-8 bg-blue-300 h-[60%] rounded-t-sm"></div>
-                   <div className="w-8 bg-blue-200 h-[40%] rounded-t-sm"></div>
-                </div>
+                {filteredTxns.length === 0 ? (
+                  <div className="flex-1 flex flex-col items-center justify-center text-gray-400 opacity-60">
+                    <span className="text-5xl mb-3">📉</span>
+                    <p className="font-bold text-sm tracking-widest uppercase">Insufficient Data</p>
+                    <p className="text-xs">No transactions available to analyze.</p>
+                  </div>
+                ) : (
+                  <div className="flex items-end justify-between h-32 w-full max-w-lg mx-auto pb-2 border-b-2 border-gray-100 px-6">
+                     <div className="w-8 bg-blue-100 h-[30%] rounded-t-sm hover:h-[35%] transition-all"></div>
+                     <div className="w-8 bg-blue-200 h-[50%] rounded-t-sm hover:h-[55%] transition-all"></div>
+                     <div className="w-8 bg-blue-300 h-[40%] rounded-t-sm hover:h-[45%] transition-all"></div>
+                     <div className="w-8 bg-blue-400 h-[80%] rounded-t-sm hover:h-[85%] transition-all"></div>
+                     <div className="w-8 bg-blue-600 h-[100%] rounded-t-sm shadow-sm hover:h-[95%] transition-all relative group"><span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 font-bold transition-opacity">Peak</span></div>
+                     <div className="w-8 bg-blue-300 h-[60%] rounded-t-sm hover:h-[65%] transition-all"></div>
+                     <div className="w-8 bg-blue-200 h-[40%] rounded-t-sm hover:h-[45%] transition-all"></div>
+                  </div>
+                )}
               </div>
             </div>
           )}
